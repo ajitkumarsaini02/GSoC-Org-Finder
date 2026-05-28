@@ -1340,18 +1340,113 @@ requestAnimationFrame(()=>{
 });
 
 // Sync hero search with hidden search input and initialize on load
+// Sync hero search with hidden search input and initialize on load
 const heroSearch = document.getElementById('hero-search');
+
+
+// ===== Recent Search History =====
+
+const recentSearchesContainer =
+  document.getElementById("recentSearches");
+
+const clearSearchHistoryBtn =
+  document.getElementById("clearSearchHistory");
+
+let recentSearches =
+  JSON.parse(localStorage.getItem("recentSearches")) || [];
+
+function renderRecentSearches() {
+  if (!recentSearchesContainer) return;
+
+  recentSearchesContainer.innerHTML = "";
+
+  if (recentSearches.length === 0) {
+    recentSearchesContainer.innerHTML = `
+      <span class="text-xs text-zinc-400 italic">
+        No recent searches
+      </span>
+    `;
+    return;
+  }
+
+  recentSearches.forEach((search) => {
+    const btn = document.createElement("button");
+
+    btn.className = "recent-search-btn";
+    btn.textContent = search;
+
+    btn.addEventListener("click", () => {
+      heroSearch.value = search;
+
+      const hiddenSearch =
+        document.getElementById("searchInput");
+
+      if (hiddenSearch) {
+        hiddenSearch.value = search;
+      }
+
+      applyFilters();
+    });
+
+    recentSearchesContainer.appendChild(btn);
+  });
+}
+
+function saveRecentSearch(searchTerm) {
+  if (!searchTerm.trim()) return;
+
+  recentSearches = recentSearches.filter(
+    (item) =>
+      item.toLowerCase() !== searchTerm.toLowerCase()
+  );
+
+  recentSearches.unshift(searchTerm);
+
+  recentSearches = recentSearches.slice(0, 6);
+
+  localStorage.setItem(
+    "recentSearches",
+    JSON.stringify(recentSearches)
+  );
+
+  renderRecentSearches();
+}
+
+clearSearchHistoryBtn?.addEventListener("click", () => {
+  recentSearches = [];
+
+  localStorage.removeItem("recentSearches");
+
+  renderRecentSearches();
+});
+
+// Initial render
+renderRecentSearches();
+
 if (heroSearch) {
-  heroSearch.value = document.getElementById('searchInput')?.value || new URLSearchParams(location.search).get('q') || '';
+  heroSearch.value =
+    document.getElementById('searchInput')?.value ||
+    new URLSearchParams(location.search).get('q') ||
+    '';
+
   heroSearch.addEventListener('input', (e) => {
-    const searchInput = document.getElementById('searchInput');
+
+    const value = e.target.value.trim();
+
+    // save only meaningful searches
+    if (value.length > 1) {
+      saveRecentSearch(value);
+    }
+
+    const searchInput =
+      document.getElementById('searchInput');
+
     if (searchInput) {
       searchInput.value = e.target.value;
       applyFilters();
     }
   });
 }
-
 // Event listeners for selects
 ['categoryFilter', 'complexityFilter', 'sortSelect'].forEach(id => {
   document.getElementById(id)?.addEventListener('change', () => applyFilters());
