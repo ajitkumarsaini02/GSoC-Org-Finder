@@ -2588,7 +2588,6 @@ if (heroSearch) {
     '';
 
   heroSearch.addEventListener('input', (e) => {
-
     const value = e.target.value.trim();
 
     // save only meaningful searches
@@ -2601,47 +2600,29 @@ if (heroSearch) {
 
     if (searchInput) {
       searchInput.value = e.target.value;
-      document.querySelectorAll('.filter-chip').forEach(c => {
-        c.classList.remove('bg-orange-600', 'text-white');
-        c.classList.add('bg-surface-container-highest');
-      });
-
-      if (isCurrentlyActive) {
-        activeChip = null;
-      } else {
-        chip.classList.add('bg-orange-600', 'text-white');
-        chip.classList.remove('bg-surface-container-highest');
-
-        if (text.includes('bookmarked')) activeChip = 'bookmarked';
-        else if (text.includes('veteran')) activeChip = 'veterans';
-        else if (text.includes('newcomer')) activeChip = 'newcomers';
-        else if (text.includes('low competition')) activeChip = 'low-competition';
-        else if (text.includes('high competition')) activeChip = 'high-competition';
-        else if (text.includes('actively')) activeChip = 'active';
-        else activeChip = null;
-      }
       applyFilters();
-    });
+    }
   });
 }
 // Event listeners for selects
 ['categoryFilter', 'complexityFilter', 'sortSelect'].forEach(id => {
   document.getElementById(id)?.addEventListener('change', () => applyFilters());
+});
 
-  // Phase 2: Add programmatic event listeners to pills, empty state clear button, and compare modal button
-  document.querySelectorAll('.pill[data-lang]').forEach(pill => {
-    pill.addEventListener('click', () => {
-      if (typeof globalThis.togglePill === 'function') {
-        globalThis.togglePill(pill);
-      }
-    });
+// Phase 2: Add programmatic event listeners to pills, empty state clear button, and compare modal button
+document.querySelectorAll('.pill[data-lang]').forEach(pill => {
+  pill.addEventListener('click', () => {
+    if (typeof globalThis.togglePill === 'function') {
+      globalThis.togglePill(pill);
+    }
   });
+});
 
-  document.getElementById('emptyStateClearBtn')?.addEventListener('click', clearAllFilters);
-  document.getElementById('openCompareModalBtn')?.addEventListener('click', openCompareModal);
+document.getElementById('emptyStateClearBtn')?.addEventListener('click', clearAllFilters);
+document.getElementById('openCompareModalBtn')?.addEventListener('click', openCompareModal);
 
-  // Wire up live stats fetch button
-  document.getElementById('mFetchBtn')?.addEventListener('click', fetchModalGH);
+// Wire up live stats fetch button
+document.getElementById('mFetchBtn')?.addEventListener('click', fetchModalGH);
 
   // Event delegation for trending cards scroll list
   const trendingScroll = document.getElementById('trendingScroll');
