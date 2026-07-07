@@ -1,4 +1,4 @@
-/* global ORGS, openModal, toggleCompare, toggleBookmark, openRandomOrg, clearAllFilters, openCompareModal, fetchModalGH, unselectLanguage, clearAllLanguages */
+/* global ORGS, openModal, toggleCompare, toggleBookmark, openRandomOrg, clearAllFilters, openCompareModal, fetchModalGH, unselectLanguage, clearAllLanguages, observeImage, preloadImage */
 /* exported openAnalytics, closeAnEvent, fetchAll, fetchModalGH, toggleCompareFromModal, openCompare, closeCompareEv, imgErr, toggleBookmark, toggleChip, resetFilters, closeModalEv, openIssuesPage, closeIssuesPage, fetchAllIssues, showMoreIssues */
 
 // ══════════════════════════════════════════════
@@ -1151,8 +1151,23 @@ function renderOrgs(reset = true) {
     const logoUrl = githubOwner ? `https://github.com/${githubOwner}.png?size=80` : '';
 
     const logoHtml = logoUrl
-      ? safeHTML`<img src="${logoUrl}" data-org-name="${org.name}" alt="${org.name} logo" class="w-full h-full object-contain rounded-lg" />`
-      : safeHTML`<div class="logo-placeholder flex w-full h-full items-center justify-center text-primary font-bold text-xl bg-primary/5">${(org.name || '?')[0].toUpperCase()}</div>`;
+      ? safeHTML`
+          <img
+            data-src="${logoUrl}"
+            data-org-name="${org.name}"
+            alt="${org.name} logo"
+            class="org-logo w-full h-full object-contain rounded-lg"
+            loading="lazy"
+            decoding="async"
+            width="56"
+            height="56"
+        />
+        `
+      : safeHTML`
+          <div class="logo-placeholder flex w-full h-full items-center justify-center text-primary font-bold text-xl bg-primary/5">
+            ${(org.name || "?")[0].toUpperCase()}
+          </div>
+        `;
 
     const tagsHtml = org.tags.slice(0, 3).map(t => safeHTML`<span class="px-2 py-0.5 bg-surface-container-low dark:bg-zinc-800 text-[10px] font-mono rounded text-zinc-600 dark:text-zinc-400">${t}</span>`);
     const moreTagsHtml = org.tags.length > 3 ? safeHTML`<span class="px-2 py-0.5 bg-surface-container-low dark:bg-zinc-800 text-[10px] font-mono rounded text-zinc-600 dark:text-zinc-400 cursor-help" title="${org.tags.slice(3).join(', ')}">+${String(org.tags.length - 3)}</span>` : '';
@@ -1204,6 +1219,14 @@ function attachOrgCardListeners(root) {
       handleImgError(e.target, e.target.dataset.orgName);
     });
     img.__attached = true;
+  });
+
+  root.querySelectorAll("img.org-logo").forEach((img) => {
+    observeImage(img);
+
+    img.addEventListener("mouseenter", () => {
+      preloadImage(img.dataset.src || img.src);
+    });
   });
 
   // Bookmark toggling

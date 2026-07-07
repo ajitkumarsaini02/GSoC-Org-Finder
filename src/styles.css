@@ -235,7 +235,17 @@ body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-
 .bgfi{background:rgba(26,86,219,.07);color:var(--blue);border-color:rgba(26,86,219,.2);cursor:default}
 .tags{display:flex;flex-wrap:wrap;gap:4px}
 .tag{font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid var(--border2);color:var(--muted);background:var(--tag-bg);font-family:'Fira Code',monospace;transition:background .3s,border-color .3s,color .3s}
-.org-logo{width:48px;height:48px;border-radius:10px;object-fit:cover;border:1.5px solid var(--border2);background:#fff;flex-shrink:0;transition:border-color .18s}
+.org-logo{
+  width:48px;
+  height:48px;
+  border-radius:10px;
+  object-fit:cover;
+  border:1.5px solid var(--border2);
+  background:#fff;
+  flex-shrink:0;
+  filter: blur(8px);
+  transition: border-color .18s, filter .3s ease;
+}
 [data-theme="dark"] .org-logo{border-color:rgba(255,255,255,.12)}
 .issue-logo{background:#fff!important}
 .org-logo-placeholder{width:48px;height:48px;border-radius:10px;background:var(--orange-pale);color:var(--orange);font-family:'Playfair Display',serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid var(--orange-border)}
@@ -726,8 +736,6 @@ body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-
   .org-name{font-size:12px}
 }
 
-
-
 /* ═══════════════════════════════════════════
    SELECTED LANGUAGES STRIP
 ═══════════════════════════════════════════ */
@@ -904,4 +912,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',sans-
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
+}
+
+.org-logo.loaded{
+    filter: blur(0);
 }
