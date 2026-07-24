@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-09T13:08:02.489Z",
-  "totalIssues": 50,
+  "generatedAt": "2026-07-24T13:28:35.222Z",
+  "totalIssues": 51,
   "totalOrgs": 20,
   "totalLabels": 68,
   "topOrganizations": [
@@ -8,11 +8,11 @@
     "AnkiDroid",
     "ArduPilot",
     "Boa",
-    "C2SI",
     "cBioPortal for Cancer Genomics",
     "checkstyle",
     "CircuitVerse.org",
     "Dart",
-    "DBpedia"
+    "DBpedia",
+    "omegaUp"
   ]
 }
